@@ -1,2 +1,33 @@
-# galaksija
-Open-source tools, notes, and demos for the Galaksija home DIY computer (1983, Yugoslavia).  
+# Galaksija
+
+Open-source tools, notes, and demos for the **Galaksija** home computer (1983, Yugoslavia).  
+This monorepo hosts multiple subprojects — the first is **`hires_maker`**, a GUI + CLI pipeline to convert modern images into the 2 KB IM2 stream used by Tomaž Šolc’s high-resolution video driver and then inject that stream into `.gtp` tapes ready for loading on real hardware.
+
+## What’s inside
+
+- **[`hires_maker`](./hires_maker/)** — Python/Tk app and CLI that:
+  - crops/zooms to 4:3
+  - supports multiple dithers (threshold, ordered, Floyd–Steinberg, halftones)
+  - provides a Galaksija-style **Tile 2×3 “levels”** mode
+  - optional **invert**, **vertical tile separators**, and **Reset to defaults**
+  - generates a 2 KB IM2 stream and injects it into your chosen GTP template
+
+## Why this exists
+
+Tomaž Šolc demonstrated a **64×192** “high-resolution” mode by driving video via Z80 **interrupt mode 2 (IM 2)** and timing, reading 3 scanlines per character row and packing pixels as 2×3 tiles (6 bits/byte) into a 2 KB framebuffer. See his excellent write-up for the architecture, memory map, and constraints.  [oai_citation:0‡web.archive.org](https://web.archive.org/web/20221228104800/https%3A//www.tablix.org/~avian/blog/archives/2009/01/high_resolution_graphics_on_galaksija/)
+
+Background on Z80 IM 2 (how the CPU gets a 16-bit vector from `I` + data bus and why machines like the ZX Spectrum used a vector table / bus tricks) is summarized in the classic Sinclair FAQ.  [oai_citation:1‡rk.nvg.ntnu.no](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html)
+
+## Subprojects
+
+- [`hires_maker`](./hires_maker/) — image→IM2→GTP toolchain with live preview
+
+## License
+
+- Code in this repository is provided under the MIT License (unless noted).
+- Linked articles retain their original copyrights.
+
+## Acknowledgments
+
+- Tomaž Šolc for the pioneering Galaksija high-res work and documentation.  [oai_citation:2‡web.archive.org](https://web.archive.org/web/20221228104800/https%3A//www.tablix.org/~avian/blog/archives/2009/01/high_resolution_graphics_on_galaksija/)
+- The Sinclair FAQ for a clear explanation of Z80 interrupt modes.  [oai_citation:3‡rk.nvg.ntnu.no](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html)
