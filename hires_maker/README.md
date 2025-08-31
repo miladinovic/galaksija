@@ -50,9 +50,12 @@ pip install pillow numpy
 
 Clone the repository:
 ```bash
-git clone https://github.com/yourname/galaksija.git
+git clone https://github.com/miladinovic/galaksija.git
 cd galaksija/hires_maker
 ```
+
+Or download as ZIP file:
+https://github.com/miladinovic/galaksija/archive/refs/heads/main.zip
 
 ## GUI Usage
 ```bash
