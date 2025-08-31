@@ -14,13 +14,13 @@ This monorepo hosts multiple subprojects — the first is **`hires_maker`**, a G
 
 ## Why this exists
 
-Tomaž Šolc demonstrated a **64×192** “high-resolution” mode by driving video via Z80 **interrupt mode 2 (IM 2)** and timing, reading 3 scanlines per character row and packing pixels as 2×3 tiles (6 bits/byte) into a 2 KB framebuffer. See his excellent write-up for the architecture, memory map, and constraints.  [oai_citation:0‡web.archive.org](https://web.archive.org/web/20221228104800/https%3A//www.tablix.org/~avian/blog/archives/2009/01/high_resolution_graphics_on_galaksija/)
+Tomaž Šolc demonstrated a **64×192** “high-resolution” mode by driving video via Z80 **interrupt mode 2 (IM 2)** and timing, reading 3 scanlines per character row and packing pixels as 2×3 tiles (6 bits/byte) into a 2 KB framebuffer. See his excellent write-up for the architecture, memory map, and constraints.  [1]
 
-Background on Z80 IM 2 (how the CPU gets a 16-bit vector from `I` + data bus and why machines like the ZX Spectrum used a vector table / bus tricks) is summarized in the classic Sinclair FAQ.  [oai_citation:1‡rk.nvg.ntnu.no](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html)
+Background on Z80 IM 2 (how the CPU gets a 16-bit vector from `I` + data bus and why machines like the ZX Spectrum used a vector table / bus tricks) is summarized in the classic Sinclair FAQ.  [2]
 
 ## Subprojects
 
-- [`hires_maker`](./hires_maker/) — image→IM2→GTP toolchain with live preview
+- [`hires_maker`](./hires_maker/) — image→hres 2048KB image→GTP toolchain with live preview
 
 ## License
 
@@ -29,5 +29,5 @@ Background on Z80 IM 2 (how the CPU gets a 16-bit vector from `I` + data bus and
 
 ## Acknowledgments
 
-- Tomaž Šolc for the pioneering Galaksija high-res work and documentation.  [oai_citation:2‡web.archive.org](https://web.archive.org/web/20221228104800/https%3A//www.tablix.org/~avian/blog/archives/2009/01/high_resolution_graphics_on_galaksija/)
-- The Sinclair FAQ for a clear explanation of Z80 interrupt modes.  [oai_citation:3‡rk.nvg.ntnu.no](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html)
+- Tomaž Šolc for the pioneering Galaksija high-res work and documentation.  [1](https://web.archive.org/web/20221228104800/https%3A//www.tablix.org/~avian/blog/archives/2009/01/high_resolution_graphics_on_galaksija/)
+- The Sinclair FAQ for a clear explanation of Z80 interrupt modes.  [2](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html)
