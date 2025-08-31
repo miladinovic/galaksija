@@ -9,8 +9,7 @@ This monorepo hosts multiple subprojects — the first is **`hires_maker`**, a G
   - crops/zooms to 4:3
   - supports multiple dithers (threshold, ordered, Floyd–Steinberg, halftones)
   - provides a Galaksija-style **Tile 2×3 “levels”** mode
-  - optional **invert**, **vertical tile separators**, and **Reset to defaults**
-  - generates a 2 KB IM2 stream and injects it into your chosen GTP template
+  - generates a 2 KB binary stream and injects it into your chosen GTP template
 
 ## Why this exists
 
