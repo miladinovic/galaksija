@@ -22,14 +22,25 @@ This tool targets enthusiasts working with real hardware or emulators that suppo
 
 Original → Processed preview → Display on Galaksija
 
-![Original](img/gkidorg.png?raw=true "Original image")
+<img src="img/gkidorg.png?raw=true" alt="Logo" width=320/>
+Izvor: "Računari u vašoj kući" br. 1, jan. 1984
+
+
 
 **Dithering Ordered 8×8**
-![Preview 1](img/gkid1sc.png?raw=true)
+
+<img src="img/gkid1sc.png?raw=true" alt="Logo" height=420/>
+
+Result on Galaksija
+
 ![On Galaksija 1](img/gkid1.png?raw=true)
 
 **No Dithering**
-![Preview 2](img/gkid2sc.png?raw=true)
+
+<img src="img/gkid2sc.png?raw=true" alt="Logo" height=420/>
+
+Result on Galaksija
+
 ![On Galaksija 2](img/gkid2.png?raw=true)
 
 ## Installation
@@ -94,9 +105,9 @@ Reference: [High resolution graphics on Galaksija (archived)](https://web.archiv
 ## Why IM2 and How the Trick Works
 On Z80 machines, **Interrupt Mode 2 (IM 2)** allows vectoring via a programmable table. From the Spectrum FAQ:
 
-> “The other mode that is commonly used on the Spectrum is IM 2. In IM 2, the processor builds the interrupt vector by taking I as the high byte, while the interrupting device effectively supplies the low byte via the data bus.”
+> “The other mode that is commonly used on the Spectrum is IM 2. In IM 2, the processor builds the interrupt vector by taking I as the high byte, while the interrupting device effectively supplies the low byte via the data bus. The normal Spectrum **contains no hardware to place a byte on the bus**, and the bus will therefore always read **FF** (because the ULA also doesn't read the screen if it generates an interrupt), so the resulting index address is 256*I+255. However, some not-so-neat hardware devices put things on the data bus when they shouldn't, so later programs didn't assume the low index byte was FF. These programs contain a 257 byte table of equal bytes starting at 256*I, and the interrupt routine is placed at an address that is a multiple of 257. A useful but not so much used trick on the Spectrum is to make the table contain FF's (or use the ROM for this) and put a byte 18 hex, the opcode for JR, at FFFF. The first byte of the ROM is a DI, F3 hex, so the JR will jump to FFF4, where a long JP to the actual interrupt routine is put.”
 
-On Galaksija, a similar solution is used for video fetch. This requires ~260 bytes for the vector trampoline, placed in memory previously reserved for the framebuffer — freeing the Z80 to stream tile data during the interrupt service.
+On Galaksija, a similar solution is used for video fetch. This requires ~260 bytes for the vector **trampoline**, placed in memory previously reserved for the framebuffer.
 
 - Extra reading: [Z80 Interrupts (Spectrum FAQ)](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html#INTERRUPTS)
 
