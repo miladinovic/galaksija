@@ -129,6 +129,6 @@ Tips:
 - Try Tile 2×3 for photos, Ordered/Halftone for logos/text
 
 ## Credits
-- **Tomaz Šolc** — original Galaksija IM2 routine and article
+- **Tomaž Šolc** — original Galaksija IM2 routine and article
 - **Community** resources on Z80 IM2 & Spectrum interrupts
 - **Galaksija** preservation projects
