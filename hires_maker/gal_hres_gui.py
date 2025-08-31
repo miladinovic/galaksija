@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Galaksija IM2 Maker — GUI + CLI with background worker
+Galaksija hres Maker — GUI + CLI with background worker
 Now with Levels (black/white/gamma), Reset Levels, and Invert.
+
+Autor: Aleksandar Miladinovic, August 2025
 """
 
 import sys
