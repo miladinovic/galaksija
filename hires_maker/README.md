@@ -1,8 +1,9 @@
 # Galaksija High-Resolution Maker (hires_maker)
 
-Turn any image into a 2 KB graphics stream for the Yugoslav 8-bit computer **Galaksija**. The app ships with several dithering modes tailored to Galaksija’s **2×3-dot tile raster**.
+Turn any image into a 2 KB graphics stream for the Yugoslav 8-bit computer **Galaksija**.  
+The app ships with several dithering modes tailored to Galaksija’s **2×3-dot tile raster**.
 
-This tool targets enthusiasts working with real hardware or emulators that support **Tomaz Šolc’s high-resolution hires routine**.
+This tool targets enthusiasts working with real hardware or emulators that support **Tomaž Šolc’s high-resolution hires routine**.
 
 ## Features
 - Live preview GUI (pan/zoom with mouse wheel + drag)
@@ -12,26 +13,30 @@ This tool targets enthusiasts working with real hardware or emulators that suppo
   - Floyd–Steinberg
   - Ordered 8×8 (Bayer)
   - Halftone 45° / 90°
+  - Stucki
+  - Atkinson
 - Threshold slider + Invert checkbox
 - Level correction sliders (black/white/midpoint)
 - Vertical separators overlay (to see 2×3 tile boundaries)
+- Dictionary-based encoding:
+  - **Dot (DICT)** — uses only C0–FF from the Galaksija dictionary
+  - **Full ASCII** — uses the entire ASCII + C0–FF dictionary
 - Template injection into two `.GTP` variants (Galaksija 40 and Original) with automatic checksum fixup
+- Optional WAV export for the “Original” template (audio load)
 - Background worker keeps UI responsive while rendering and encoding
 
 ## Examples
 
 Original → Processed preview → Display on Galaksija
 
-<img src="img/gkidorg.png?raw=true" alt="Logo" width=320/>
+<img src="img/gkidorg.png?raw=true" alt="Logo" width=320/>  
 Izvor: "Računari u vašoj kući" br. 1, jan. 1984
-
-
 
 **Dithering Ordered 8×8**
 
 <img src="img/gkid1sc.png?raw=true" alt="Logo" height=420/>
 
-Result on Galaksija
+Result on Galaksija:
 
 ![On Galaksija 1](img/gkid1.png?raw=true)
 
@@ -39,13 +44,36 @@ Result on Galaksija
 
 <img src="img/gkid2sc.png?raw=true" alt="Logo" height=420/>
 
-Result on Galaksija
+Result on Galaksija:
 
 ![On Galaksija 2](img/gkid2.png?raw=true)
 
-## Installation
+## Installation (Prebuilt Binaries)
+
+## Prebuilt Binaries
+Prebuilt executables are provided for convenience:
+- **macOS Apple Silicon** (`.app` bundle, built on macOS 14.3)
+- **macOS Intel** (`.app` bundle, built on macOS 14.3)
+- **Windows 10/11 64-bit** (`.exe`)
+- **Linux Ubuntu 24.04 LTS** (`.bin`)
+
+Just download and run the correct version for your platform.  
+On Linux, mark the binary as executable first:
+```bash
+chmod +x Galaksija_HRES_Maker_Linux.bin
+./Galaksija_HRES_Maker_Linux.bin
+```
+## Installation (Linux/macOS/Windows, from source)
+Make sure you have **Python 3.8+** installed.  
+
+Required dependencies:
 ```bash
 pip install pillow numpy
+```
+
+On Linux you also need Tkinter development libraries for the GUI:
+```bash
+sudo apt install python3-tk python3-pil.imagetk
 ```
 
 Clone the repository:
@@ -54,10 +82,11 @@ git clone https://github.com/miladinovic/galaksija.git
 cd galaksija/hires_maker
 ```
 
-Or download as ZIP file:
+Or download as ZIP file:  
 https://github.com/miladinovic/galaksija/archive/refs/heads/main.zip
 
-## GUI Usage
+## Running
+### GUI
 ```bash
 python gal_hres_gui.py
 ```
@@ -70,24 +99,17 @@ python gal_hres_gui.py
 
 Mouse: drag to pan; wheel to zoom
 
-## CLI Usage
+### CLI
 Basic example:
 ```bash
-python gal_hres_gui.py \
-  --image in.jpg \
-  --out out.gtp \
-  --template G40 \
-  --dither "Tile 2×3" \
-  --threshold 140 \
-  --preview preview.png \
-  --vlines
+python gal_hres_gui.py   --image in.jpg   --out out.gtp   --template G40   --dither "Tile 2×3"   --threshold 140   --preview preview.png   --vlines
 ```
 
 Options:
 - `--image PATH` — input image
 - `--out PATH` — output `.gtp`
 - `--template {G40,ORG}` — which template to use
-- `--dither {Threshold,"Tile 2×3",Floyd–Steinberg,"Ordered 8×8","Halftone 45°","Halftone 90°"}`
+- `--dither {Threshold,"Tile 2×3",Floyd–Steinberg,"Ordered 8×8","Halftone 45°","Halftone 90°","Stucki","Atkinson"}`
 - `--threshold INT` — cut-off for Threshold/Floyd/Ordered/Halftone
 - `--invert` — invert before dithering
 - `--vlines` — draw vertical tile lines on preview PNG
@@ -106,20 +128,23 @@ Run without arguments to start the GUI.
 Reference: [High resolution graphics on Galaksija (archived)](https://web.archive.org/web/20221228104800/https://www.tablix.org/~avian/blog/archives/2009/01/high_resolution_graphics_on_galaksija/)
 
 ## Why IM2 and How the Trick Works
-On Z80 machines, **Interrupt Mode 2 (IM 2)** allows vectoring via a programmable table. From the Spectrum FAQ:
-
-> “The other mode that is commonly used on the Spectrum is IM 2. In IM 2, the processor builds the interrupt vector by taking I as the high byte, while the interrupting device effectively supplies the low byte via the data bus. The normal Spectrum **contains no hardware to place a byte on the bus**, and the bus will therefore always read **FF** (because the ULA also doesn't read the screen if it generates an interrupt), so the resulting index address is 256*I+255. However, some not-so-neat hardware devices put things on the data bus when they shouldn't, so later programs didn't assume the low index byte was FF. These programs contain a 257 byte table of equal bytes starting at 256*I, and the interrupt routine is placed at an address that is a multiple of 257. A useful but not so much used trick on the Spectrum is to make the table contain FF's (or use the ROM for this) and put a byte 18 hex, the opcode for JR, at FFFF. The first byte of the ROM is a DI, F3 hex, so the JR will jump to FFF4, where a long JP to the actual interrupt routine is put.”
-
-On Galaksija, a similar solution is used for video fetch. This requires ~260 bytes for the vector **trampoline**, placed in memory previously reserved for the framebuffer.
+On Z80 machines, **Interrupt Mode 2 (IM 2)** allows vectoring via a programmable table.  
+On Galaksija, a similar solution is used for video fetch. This requires ~260 bytes for the vector **trampoline**, placed in memory previously reserved for the framebuffer.  
+The trampoline feeds the high-resolution video routine while still respecting the Z80’s IM2 logic.
 
 - Extra reading: [Z80 Interrupts (Spectrum FAQ)](https://rk.nvg.ntnu.no/sinclair/faq/tech_z80.html#INTERRUPTS)
+
 
 ## Dithering Details
 - **Threshold**: direct binarization (with optional invert)
 - **Floyd–Steinberg**: error-diffusion (7/16, 3/16, 5/16, 1/16)
 - **Ordered 8×8**: Bayer matrix; good for flat regions
 - **Halftone 45°/90°**: rotated halftone matrices, CRT-like look
+- **Stucki**: finer error diffusion, smoother than Floyd
+- **Atkinson**: softer error diffusion, classic Macintosh style
 - **Tile 2×3 (levels)**: per-tile mean → 0–6 dots; vertical fill order matches on-screen geometry
+- **Dot (DICT)**: maps directly to the C0–FF tile dictionary
+- **Full ASCII**: uses entire dictionary including C0–FF
 
 ## Quick Start
 Run with sample image:
@@ -130,8 +155,8 @@ python gal_hres_gui.py --image img/gkid.png --out out.gtp --preview preview.png 
 Tips:
 - Use high-contrast images for best results
 - Try Tile 2×3 for photos, Ordered/Halftone for logos/text
+- Use Dot (DICT) mode for maximum hardware fidelity
 
-## Credits
-- **Tomaž Šolc** — original Galaksija IM2 routine and article
-- **Community** resources on Z80 IM2 & Spectrum interrupts
-- **Galaksija** preservation projects
+## Author
+**Aleksandar Miladinović**  
+📧 miladinovic@blu.it
