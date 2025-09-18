@@ -21,7 +21,7 @@ The source preserves the original timing and binary layout where it matters, but
 You can build this with **z80asm** (standalone) or **zcc (z88dk)**. The source has a small switch for z88dk CRT behavior.
 
 
-### 1) Build with `zcc` (z88dk Dwonload: https://github.com/z88dk/z88dk/releases ) - Easiest way 
+### 1) Build with `zcc` (z88dk download: https://github.com/z88dk/z88dk/releases ) - Easiest way 
 
 ```sh
 cd galaksija/hires_org_source
