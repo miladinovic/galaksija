@@ -1,13 +1,12 @@
 # Galaksija Hi-Res IM2 Driver (original)
 
-**Author:** Tomaz Solc  
-**Disassembled, modified and commented by:** Aleksandar Miladinovic (University of Trieste, Trieste/Trst, Italy) — <miladinovic@blu.it>
+**Author:** Tomaž Šolc  
+**Disassembled, modified and commented by:** Aleksandar Miladinović (University of Trieste, Trieste/Trst, Italy) — <miladinovic@blu.it>
 
 This folder contains a cleaned, commented, **label-based rebuild** of the classic Galaksija hi-resolution graphics driver that uses **Interrupt Mode 2 (IM2)** and a cycle-counted ISR to draw pseudo-hires scanlines.
 
 The source preserves the original timing and binary layout where it matters, but replaces hardcoded numeric addresses with symbols so the code is easier to maintain. Optional features like the “snow” sparkle can be toggled at assemble time. Vertical alignment is configurable for better compatibility across different Galaksijas.
 
-> **Tip:** The old `;2cxx` comments you may have seen in disassemblies were byte offsets in the original dump. Those offsets aren’t needed anymore because everything is label-driven.
 
 ---
 
@@ -15,38 +14,37 @@ The source preserves the original timing and binary layout where it matters, but
 
 - **`hires_orig.asm`** — main source (IM2 setup, ISR, stream decoder, BASIC trampoline, messages).
 - **`image.bin`** — raw picture data included by the driver (unchanged from the original).
-- *(Optional)* `Makefile` — you can add one, but build commands are shown below.
-
 ---
 
 ## Build
 
 You can build this with **z80asm** (standalone) or **zcc (z88dk)**. The source has a small switch for z88dk CRT behavior.
 
-### 1) Build with `z80asm`
+
+### 1) Build with `zcc` (z88dk Dwonload: https://github.com/z88dk/z88dk/releases ) - Easiest way 
+
+```sh
+cd galaksija/hires_org_source
+zcc +gal -create-app -o hires hires_orig.asm
+```
+
+- z88dk’s CRT inserts a short prologue. The source handles this with a `Z88DK` switch and adjusts the BASIC trampoline to call `USR(&2C3A+10)` automatically.
+- Output is a Galaksija app you can load and `RUN`.
+
+### 2) Build with `z80asm` or similar Z80 compiler
 
 ```sh
 cd galaksija/hires_org_source
 
 # Assemble a flat binary
-z80asm -o outZ.bin hires_orig.asm
+z80asm -o out.bin hires_orig.asm
 
-# If you use a GTP builder (example):
-python3 ../tools/build_gtp.py --bin outZ.bin --out hires.gtp --load 0x2C3A --usr 0x2C3A
+# If you use a GTP builder (to be published soon):
+python3 ../tools/build_gtp.py --bin out.bin --out hires.gtp --load 0x2C3A --usr 0x2C3A
 ```
 
 - The embedded BASIC line calls `USR(&2C3A)` by default (no CRT prologue).
 - Run by loading the GTP and typing `RUN` in Galaksija BASIC.
-
-### 2) Build with `zcc` (z88dk)
-
-```sh
-cd galaksija/hires_org_source
-zcc +gal -create-app -O2 -o hires.gat hires_orig.asm
-```
-
-- z88dk’s CRT inserts a short prologue. The source handles this with a `Z88DK` switch and adjusts the BASIC trampoline to call `USR(&2C3A+10)` automatically.
-- Output is a Galaksija app you can load and `RUN`.
 
 ---
 
@@ -110,8 +108,8 @@ Z88DK:            EQU 1               ; or EQU 0 for plain z80asm
 
 ## Running
 
-1. Load the built image (`.gtp` or `.gat`) into your Galaksija (hardware or emulator).
-2. From BASIC: `RUN`.
+1. Load the built image (`.gtp`) into your Galaksija (hardware or emulator).
+2. From BASIC: `OLD`-->`RUN`.
 3. The driver sets up IM2, shows the messages, and displays the image.  
    Press any key to exit back to BASIC. On exit, `SYS_TIMING_PARAM` is restored to `VERT_DELAY_ORG` to keep BASIC happy.
 
