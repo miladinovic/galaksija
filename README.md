@@ -13,7 +13,7 @@ This monorepo hosts multiple subprojects — the first is **`hires_maker`**, a G
   - generates a 2 KB IM2 stream and injects it into your chosen GTP template
   - generates a 2 KB binary stream and injects it into your chosen GTP template
 - **[`hires_org_source`](./hires_org_source/)** — original disassembled and commented Galaksija hi-res IM2 driver source with build instructions
-- **[`gal_gtp_builder/gal_build_gtp.py`](./gal_gtp_builder/gal_build_gtp.py)** — script to build Galaksija `.GTP` files from Z80 binaries
+- **[`gal_gtp_builder/gal_build_gtp.py`](./gal_gtp_builder/** — script to build Galaksija `.GTP` files from Z80 binaries
 
 ## Why this exists
 
