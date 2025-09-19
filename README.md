@@ -12,7 +12,7 @@ This monorepo hosts multiple subprojects — the first is **`hires_maker`**, a G
   - optional **invert**, **vertical tile separators**, and **Reset to defaults**
   - generates a 2 KB IM2 stream and injects it into your chosen GTP template
   - generates a 2 KB binary stream and injects it into your chosen GTP template
-- **[`hires_org_source`](./hires_org_source/)** — original disassembled and commented Galaksija hi-res IM2 driver source with build instructions
+- **[`gal_gtp_builder/gal_build_gtp.py`](./gal_gtp_builder/gal_build_gtp.py)** — script to build Galaksija `.GTP` files from Z80 binaries
 
 ## Why this exists
 
@@ -23,7 +23,7 @@ Background on Z80 IM 2 (how the CPU gets a 16-bit vector from `I` + data bus and
 ## Subprojects
 
 - [`hires_maker`](./hires_maker/) — image→hres 2048KB image→GTP toolchain with live preview
-- [`hires_org_source`](./hires_org_source/) — original source driver, disassembled, cleaned, and commented, with flexible labels and config knobs
+- [`gal_gtp_builder`](./gal_gtp_builder/) — CLI to wrap Z80 binaries into `.GTP` tapes (and optional experimental `.wav`)
 
 ## License
 
