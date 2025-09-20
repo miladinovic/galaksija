@@ -39,8 +39,8 @@ cd galaksija/hires_org_source
 # Assemble a flat binary
 z80asm -o out.bin hires_orig.asm
 
-# If you use a GTP builder (to be published soon):
-python3 ../tools/build_gtp.py --bin out.bin --out hires.gtp --load 0x2C3A --usr 0x2C3A
+# If you use a GTP builder **[`gal_gtp_builder`](./gal_gtp_builder/)**:
+python3 ../build_gtp.py --bin out.bin --out hires.gtp
 ```
 
 - The embedded BASIC line calls `USR(&2C3A)` by default (no CRT prologue).
