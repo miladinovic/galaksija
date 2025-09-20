@@ -42,7 +42,7 @@ z80asm -o out.bin hires_orig.asm
 # If you use a GTP builder:
 python3 ../gal_build_gtp.py --bin out.bin --out hires.gtp
 ```
-- **[`gal_gtp_builder`](./gal_gtp_builder/)**
+- **[`gal_gtp_builder`](../gal_gtp_builder/)**
 - Run by loading the GTP and typing `RUN` in Galaksija BASIC.
 
 ---
