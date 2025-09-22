@@ -14,6 +14,7 @@ This monorepo hosts multiple subprojects — the first is **`hires_maker`**, a G
   - generates a 2 KB binary stream and injects it into your chosen GTP template
 - **[`hires_org_source`](./hires_org_source/)** — original disassembled and commented Galaksija hi-res IM2 driver source with build instructions
 - **[`gal_gtp_builder`](./gal_gtp_builder/)** — script to build Galaksija `.GTP` files from Z80 binaries
+- **[`gal_tapetool`](./gal_tapetool/)** — bidirectional converter between `.GTP` (tape images) and `.WAV` (tape audio) using Tomaz Šolc timings
 
 ## Why this exists
 
@@ -26,6 +27,7 @@ Background on Z80 IM 2 (how the CPU gets a 16-bit vector from `I` + data bus and
 - **[`hires_maker`](./hires_maker/)** — image→hres 2048KB image→GTP toolchain with live preview
 - **[`hires_org_source`](./hires_org_source/)** — original disassembled and commented Galaksija hi-res IM2 driver source with build instructions
 - **[`gal_gtp_builder`](./gal_gtp_builder/)** — CLI to wrap Z80 binaries into `.GTP` tapes (and optional experimental `.wav`)
+- **[`gal_tapetool`](./gal_tapetool/)** — convert `.GTP` ↔ `.WAV` with debug, sync detection, and A5 wrapping
 
 ## License
 
