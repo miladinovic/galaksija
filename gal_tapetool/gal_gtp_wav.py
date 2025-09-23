@@ -1,30 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Build a Galaksija .GTP file from a flat Z80 binary (and optional BASIC tail).
+This tool provides conversion between Galaksija .GTP files (tape images) and .WAV audio files following Tomaž Šolc’s documented timing. 
+It simplifies transferring programs between emulators, modern development, and real Galaksija hardware.
+
+Features
+- Convert .gtp to .wav with correct pulse timings.
+- Convert .wav to .gtp using a robust PCM pulse decoder.
+- Supports variable leader lengths (sync bytes).
+- Automatically wraps A5-starting decoded streams into valid .gtp.
+- Debug mode for inspecting thresholds, impulses, and hex dumps.
 
 Author: Aleksandar Miladinovic (miladinovic@blu.it) September 2025
 
-File format (as implemented here):
-
-  [00]
-  [len_lo len_hi]                 # length of everything that follows (from the two 00s up to the final byte)
-  [00 00]
-  [A5]
-  [load_lo load_hi]
-  [endp1_lo endp1_hi]             # end address + 1 (first free)
-  [payload bytes ...]             # If BASIC present: [basic_start][basic_end+1][machine code][BASIC]; else: [machine code]
-  [checksum]                      # 0xFF - (sum(bytes from A5 .. byte before checksum) & 0xFF)
-  [00]                            # trailing terminator
-
-Usage examples:
-  python build_gtp.py --bin out.bin --out out.gtp
-  # Default: BASIC tail on, block starts at 0x2C36, code at 0x2C3A
-  # No BASIC (code only) starting at 0x2C3A by default:
-  python build_gtp.py --bin out.bin --out out.gtp --no-basic
-
-  # Also write a WAV (Tomaz Šolc timings):
-  python build_gtp.py --bin out.bin --out out.gtp --wav out.wav
+Usage:
+gal_gtp_wav.py gtp2wav --in program.gtp --out program.wav
+gal_gtp_wav.py wav2gtp --in tape.wav --out program.gtp
 """
 
 from pathlib import Path
