@@ -1,0 +1,204 @@
+
+; Mapa memorije
+
+; 0000-0FFF ROM A
+; 1000-1FFF Mesto za ROM B
+; 2000-2037 Mapirana tastatura
+; 2038-203F Latch
+; 2040-27FF Ponavlja se latch i tastatura 15 puta
+; 2800-2BFF Video RAM
+; 2C00-3FFF RAM na ploci
+; 4000-FFFF RAM prosirenje
+
+;----------------------------
+
+; Addr Bytes  POR Value  Comment 
+
+; 203F  1               Latch (#7 ser Tx, #6 -CS... 
+;                       ...bits 5-2 Char Gen Row)
+; 203A  1               Read Serial Rx, bit 0
+; 203C  1               Read Flash Data Out, Bit 0
+
+; 2800	512	20	Video memorija
+; 2A00	104	00	Numericke varijable A-Z
+; 2A68	2	2800	Pozicija kursora u memoriji
+; 2A6A	2	A000	Kraj memorije
+; 2A6C	2	00	Blokiranje dela video memorije
+; 2A6E	2	00	TO registar za FOR-NEXT
+; 2A70	16	00	X$
+; 2A80	16	00	Y$
+; 2A91	2	00	Stek za aktivnu petlju
+; 2A93	2	00	Current line ptr during ForNext
+; 2A95	2	00	Basic ptr during CALL, ForNext
+; 2A99	2	00	16*ARR$+16
+; 2A9B	2	00	Adresa NEXT varijable
+; 2A9D	2	2C3C	TAKE pointer
+; 2A9F	2	00	Pozicija tekuce linije
+; 2AA1	2	00	Registar za aktivni FOR-NEXT
+; 2AA3	2	00	SP privremeno za aktivni CALL
+; 2AA5	2	00	Diferencijator za tastaturu
+; 2AA7	3	00	RND
+; 2AAC	124	00	Aritmeticki akumulatori (IX)
+; 2BA8	1	0B	Hor text pos (var STACK)
+; 2BA9	3	C9 (ret)   L I N K   za naredbe
+; 2BAC	3	C9 (ret)   L I N K   za video
+; 2BAF	1	00	Ako je bit 7=1, sat radi
+0x2C3
+; 2BB1	1	00	Flag za pomeranje slike
+; 2BB4	1	00	Registar za REPT
+; 2BB5	1	00	Flag za stampac
+; 2BB6	125	00	Bafer
+; 2C36	2	2C3A	Pointer pocetka basic-a
+; 2C38	2	2C3A	Pointer kraja basic-a
+; 2C3A	??	00	Basic program
+
+NOV40                   ; SKIP BLANKS
+        INC     DE
+Z40     LD      A,(DE)  ; skip blanks, pointer de
+        CP      20H
+        JR      Z,NOV40	; go get next byte
+        RET		; if not equal
+
+;----------------------------
+
+chs		equ BUF+90	  ; checksum (lo calculated, hi received)
+file_name	equ BUF+92	  ; 14 by, naziv fajla
+displacement	equ BUF+106
+free_bits	equ BUF+108 11298 ; lo = bit arrangement (00000000-11111111)
+				  ; hi = # of byte (0-125)
+next_block	equ BUF+110 11300 ; NEXT free block for writing (0x0010-0x03FF)
+from		equ BUF+112 11302 ; Parameter 1 (FROM)
+to		equ BUF+114 11304 ; Parameter 2 (TO)
+start_of_fn	equ BUF+116 11306 ; addr of start of fn in mem (after [ ] and ["])
+memorized	equ BUF+118 11308 ; lo = pos # inside block (0-31)(found or not)
+				  ; hi = block # (1-15)(found or not)
+current		equ BUF+120 11310 ; # of CURRENT block in test (1-15)
+fn_len		equ BUF+122 11312 ; filename len (1-14), len in blocks (1-59)
+
+
+              pages 0x10-0x1B                 pages 12-16  FlBuf
+;------------------------------------------ 
+;  0  1  2  3    4  5  6  7    8  9  A  B     C  D  E  F     SP
+;  O  J  R  H    K  P  T  U    V  N  L  B     W  D  G  F     SP
+;------------------------------------------
+
+locate_filename   ; find filename (DE), Z:found, H=block#, L=name#, 
+                  ; BC=len of pgm, DE=after fn
+		  ; NZ:not found, H=block#, L=free name#, DE = start of fn in mem
+
+SAVE [#] ["]FILENAME["] [FROM,TO]
+
+0xC7
+"G", "A", "L", "R", "A", "T", 0x00, 0x00...
+Pointere: 2 by OD i 2 by DO+1
+Fajl
+Checksum
+
+
+; Spisak naredbi sa primerima
+
+; ARR$	
+; ARR$(20)
+; BYTE	
+; PRINT BYTE(11176)
+;  	
+; BYTE 11176,12
+; CALL	
+; CALL 100
+;  	
+; CALL 10*A+100
+; CHR$	
+; PRINT CHR$(34)
+; DOT	
+; DOT 20,10
+;  	
+; DOT *
+;  	
+; IF DOT 20,10 PRINT "BELO"
+; EDIT	
+; EDIT 20
+; ELSE	
+; IF B<17 X=1 ELSE GOTO 100
+; EQ	
+; IF EQ Y$,X$(5) GOTO 100
+; FOR	
+; FOR I=A TO 100
+; GOTO	
+; GOTO 100
+;  	
+; GOTO 10*A+100
+; HOME	
+; HOME
+;  	
+; HOME 64
+;  	
+; HOME 512
+; IF	
+; IF A>5 GOTO 100
+; INPUT	
+; INPUT A
+;  	
+; INPUT X$
+; INT	
+; A=INT(B/C)
+; KEY	
+; IF KEY(1) GOTO 100
+;  	
+; A=KEY(0)
+; LIST	
+; LIST
+;  	
+; LIST 500
+; MEM	
+; PRINT MEM
+; NEW	
+; NEW
+;  	
+; NEW 256
+; NEXT	
+; NEXT I
+; OLD	
+; OLD
+;  	
+; OLD -50
+; PTR	
+; PRINT PTR X$
+; PRINT	
+; PRINT A+2*B
+;  	
+; PRINT A;"*";B;"=";C
+;  	
+; PRINT A,B,C
+;  	
+; PRINT "GALAKSIJA"
+; RETURN	
+; RETURN
+; RND	
+; A=RND
+; 	
+; PRINT INT(7*RND+1)
+; RUN	
+; RUN
+;  	
+; RUN 100
+; SAVE	
+; SAVE
+;  	
+; SAVE 15728,16251
+; STEP	
+; FOR I=100 TO 0 STEP -5
+; STOP	
+; STOP
+; TAKE	
+; TAKE A,100,B,C,250,X$
+; UNDOT	
+; UNDOT 20,10
+;  	
+; UNDOT *
+; USR	
+; A=USR(14)
+; VAL	
+; PRINT VAL(PTR X$)
+; WORD	
+; WORD 10905,0
+ 	
