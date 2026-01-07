@@ -55,6 +55,25 @@ Any similar partition that provides at least a couple of MB for **LittleFS** wil
 
 ### 1️⃣ Power and connect the ESP
 
+#### 🔌 Galaksija UART pins
+
+The sketch uses these pin definitions for the serial link between **ESP** and **Galaksija**:
+
+```cpp
+// ===================== Galaksija UART pins =====================
+static const int8_t GAL_RX_PIN = D5; // ESP RX  <- Galaksija TX
+static const int8_t GAL_TX_PIN = D6; // ESP TX  -> Galaksija RX
+```
+
+- **GAL_RX_PIN (D5)**: this is the **ESP’s RX** pin. It must be connected to **Galaksija’s TX / SAVE output**.  
+- **GAL_TX_PIN (D6)**: this is the **ESP’s TX** pin. It must be connected to **Galaksija’s RX / LOAD input**.
+
+> RX and TX are always **crossed**:  
+> Galaksija TX ➜ ESP RX (`GAL_RX_PIN`),  
+> ESP TX ➜ Galaksija RX (`GAL_TX_PIN`).
+
+Don’t forget to connect **GND ↔ GND** between ESP and Galaksija, and (if needed) protect the ESP RX with a small resistor divider if Galaksija’s TX is at 5 V.
+
 If you **don’t configure Wi‑Fi**, the ESP will start its **own Access Point (AP)** automatically.
 
 **Default AP credentials:**
