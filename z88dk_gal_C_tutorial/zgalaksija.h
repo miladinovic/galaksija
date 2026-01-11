@@ -33,7 +33,7 @@ void gal_gotoxy(char x, char y) {
 void gal_putc(char ch) {
 	z80_bpoke(SCREEN_ADDR + (_scr_y << 5) + _scr_x, ch);
 	_scr_x++;
-	if (_scr_x > 32) {
+	if (_scr_x > 31) {
 		_scr_x = 0;
 		_scr_y++;
 	}
